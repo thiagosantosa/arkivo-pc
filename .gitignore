@@ -1,0 +1,12 @@
+node_modules/
+dist/
+out/
+release/
+.angular/
+data/
+*.log
+.env
+.claude/
+.fs-test-tmp/
+apps/mobile/android/app/build/
+apps/mobile/ios/App/Pods/

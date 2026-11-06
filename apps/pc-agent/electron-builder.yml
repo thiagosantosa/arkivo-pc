@@ -1,0 +1,54 @@
+# Empacotamento do Arkivo para PC (electron-builder 26.x).
+appId: com.arkivo.pc
+productName: Arkivo para PC
+copyright: Copyright © 2026 Arkivo
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**/*
+  - "!dist/**/*.map"
+  - "!dist/**/*.test.js"
+  - "!dist/core/test-helpers.js"
+  - assets/**/*
+  - package.json
+asarUnpack: []
+extraMetadata:
+  main: dist/main/main.js
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: build/icon.png
+  executableName: Arkivo
+  # Preencha para assinar o instalador (recomendado: sem assinatura o SmartScreen avisa).
+  # signtoolOptions:
+  #   certificateSubjectName: "Arkivo"
+
+nsis:
+  oneClick: false
+  # perMachine exige elevação, necessária para criar a regra de firewall (netsh).
+  perMachine: true
+  allowElevation: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Arkivo para PC
+  uninstallDisplayName: Arkivo para PC
+  artifactName: Arkivo-para-PC-Setup-${version}.${ext}
+  include: build/installer.nsh
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false
+
+mac:
+  target: dmg
+  category: public.app-category.productivity
+  icon: build/icon.png
+  hardenedRuntime: true
+
+linux:
+  target: AppImage
+  category: Utility
+  icon: build/icon.png
+  executableName: arkivo-pc

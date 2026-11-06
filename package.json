@@ -1,0 +1,24 @@
+{
+  "name": "arkivo-pc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Arkivo para PC (Electron) — recebe os backups do celular, pastas liberadas e envio para o celular.",
+  "workspaces": [
+    "packages/shared",
+    "apps/pc-agent"
+  ],
+  "scripts": {
+    "build:shared": "npm run build -w @arkivo/shared",
+    "build": "npm run build -w @arkivo/pc-agent",
+    "dev": "npm run dev -w @arkivo/pc-agent",
+    "typecheck": "npm run build:shared && npm run typecheck -w @arkivo/pc-agent",
+    "test": "npm run build:shared && npm test -w @arkivo/shared && npm test -w @arkivo/pc-agent",
+    "dist:win": "npm run dist:win -w @arkivo/pc-agent"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15"
+  }
+}

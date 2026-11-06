@@ -1,0 +1,41 @@
+{
+  "name": "@arkivo/pc-agent",
+  "productName": "Arkivo para PC",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Arkivo para PC — recebe os backups do celular e guarda numa pasta do computador.",
+  "author": "Arkivo",
+  "license": "UNLICENSED",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build:shared": "npm --prefix ../.. run build:shared",
+    "build": "npm run build:shared && tsc -p tsconfig.json && tsc -p tsconfig.renderer.json && node scripts/copy-renderer.mjs",
+    "dev": "npm run build && electron . --dev",
+    "start": "electron .",
+    "typecheck": "tsc -p tsconfig.core.json --noEmit && tsc -p tsconfig.json --noEmit && tsc -p tsconfig.renderer.json --noEmit",
+    "test": "tsx --test src/core/*.test.ts",
+    "dist:win": "npm run build && node scripts/write-build-config.mjs && electron-builder --win nsis --x64",
+    "dist:win:teste": "npm run build && node scripts/write-build-config.mjs http://localhost:3000 && electron-builder --win nsis --x64",
+    "dist:mac": "npm run build && electron-builder --mac dmg",
+    "dist:linux": "npm run build && electron-builder --linux AppImage"
+  },
+  "dependencies": {
+    "@arkivo/shared": "0.1.0",
+    "qrcode": "1.5.4",
+    "ws": "8.22.1"
+  },
+  "devDependencies": {
+    "@fontsource/inter": "5.0.20",
+    "@phosphor-icons/web": "2.1.1",
+    "@types/node": "24.19.2",
+    "@types/qrcode": "1.5.6",
+    "@types/ws": "8.18.2",
+    "electron": "45.2.2",
+    "electron-builder": "26.18.0",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Arkivo para PC</title>
+    <link rel="stylesheet" href="vendor/inter/inter.css" />
+    <link rel="stylesheet" href="vendor/phosphor/style.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="window">
+      <header class="titlebar" id="titlebar">
+        <span class="titlebar-brand"><i class="ph ph-archive-box"></i>Arkivo para PC</span>
+        <span id="titlebar-status"></span>
+      </header>
+      <main class="content" id="view" aria-live="polite"></main>
+      <div id="dialog"></div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

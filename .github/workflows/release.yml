@@ -1,0 +1,84 @@
+# Gera o instalador do Windows e publica numa Release deste repositório.
+#
+# Antes da 1ª vez: Settings → Secrets and variables → Actions → Variables → New repository variable
+#   ARKIVO_API_URL = https://arkivo-api.onrender.com   (o endereço da sua API no Render)
+#
+# Para publicar: Actions → "Release do Windows" → Run workflow, informando a versão (ex.: 0.1.0),
+# ou crie uma tag v0.1.0 e envie (git tag v0.1.0 && git push origin v0.1.0).
+#
+# O link fixo para baixar a última versão fica:
+#   https://github.com/<dono>/arkivo-pc/releases/latest/download/Arkivo-para-PC-Setup.exe
+# Atenção: se este repositório for PRIVADO, o link só funciona para quem tem acesso a ele no GitHub.
+name: Release do Windows
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versão (ex.: 0.1.0)'
+        required: true
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      ARKIVO_BUILD_API_URL: ${{ vars.ARKIVO_API_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Conferir o endereço da API
+        shell: bash
+        run: |
+          if [ -z "$ARKIVO_BUILD_API_URL" ]; then
+            echo "::error::Defina a variável ARKIVO_API_URL do repositório (Settings → Secrets and variables → Actions → Variables)."
+            exit 1
+          fi
+          case "$ARKIVO_BUILD_API_URL" in https://*) ;; *) echo "::error::ARKIVO_API_URL precisa começar com https://"; exit 1;; esac
+          echo "API: $ARKIVO_BUILD_API_URL"
+
+      - name: Versão
+        id: ver
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then V="${{ github.event.inputs.version }}"; else V="${GITHUB_REF_NAME#v}"; fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          npm pkg set version="$V" -w @arkivo/pc-agent
+
+      - run: npm ci
+      - run: npm test
+
+      # dist:win = build + grava a API em dist/main/build-config.json (ARKIVO_BUILD_API_URL) + electron-builder (NSIS).
+      - run: npm run dist:win
+
+      - name: Nome fixo para o link "última versão"
+        shell: bash
+        run: |
+          cd apps/pc-agent/release
+          ls -la
+          cp "Arkivo-para-PC-Setup-${{ steps.ver.outputs.version }}.exe" "Arkivo-para-PC-Setup.exe"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Arkivo-para-PC-Setup-${{ steps.ver.outputs.version }}
+          path: apps/pc-agent/release/Arkivo-para-PC-Setup*.exe
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: Arkivo para PC ${{ steps.ver.outputs.version }}
+          body: |
+            Instalador do Windows (64 bits) apontando para ${{ env.ARKIVO_BUILD_API_URL }}.
+            O instalador ainda não é assinado: no aviso do Windows, clique em "Mais informações" → "Executar assim mesmo".
+          files: |
+            apps/pc-agent/release/Arkivo-para-PC-Setup-${{ steps.ver.outputs.version }}.exe
+            apps/pc-agent/release/Arkivo-para-PC-Setup.exe
+          make_latest: true

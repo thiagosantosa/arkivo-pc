@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/core/**/*.ts",
+    "src/common/**/*.ts",
+    "src/main/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/core/test-helpers.ts"
+  ]
+}
