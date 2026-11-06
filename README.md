@@ -30,7 +30,7 @@ Rodando a partir do terminal do VS Code, o Electron abre como Node e fecha na ho
 3. A Release fica em *Releases*, com dois arquivos iguais: `Arkivo-para-PC-Setup-<versão>.exe` e
    `Arkivo-para-PC-Setup.exe` (nome fixo para o link da última versão):
    `https://github.com/thiagosantosa/arkivo-pc/releases/latest/download/Arkivo-para-PC-Setup.exe`
-4. Coloque esse link em `ARKIVO_DESKTOP_URL` no site `arkivo-front` (Render) e faça um novo deploy.
+4. Coloque esse link em `ARKIVO_DESKTOP_URL` no projeto `arkivo-front` (Vercel) e faça um *Redeploy*.
 
 **Atenção:** se este repositório for **privado**, o link só funciona para quem tem acesso a ele no GitHub. Para os
 testadores baixarem, deixe o repositório público ou hospede o instalador em outro lugar público.
